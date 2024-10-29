@@ -129,6 +129,8 @@ class AutoRun:
             boy.dir = 1
             boy.action = 1
 
+        boy.speed += 0.1
+
         boy.frame = (boy.frame + 1) % 8
         boy.x += boy.dir * boy.speed
         pass
