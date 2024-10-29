@@ -1,6 +1,6 @@
 from pico2d import load_image, get_time
 
-from Labs.Lecture10_Character_Controller_1.state_machine import space_down, time_out, right_down, left_down, left_up, \
+from state_machine import space_down, time_out, right_down, left_down, left_up, \
     right_up, start_event
 from state_machine import StateMachine
 

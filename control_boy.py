@@ -1,7 +1,6 @@
 from pico2d import *
-from Labs.Lecture10_Character_Controller_1.Boy import Boy
-from Labs.Lecture10_Character_Controller_1.grass import Grass
-
+from Boy import Boy
+from grass import Grass
 
 def handle_events():
     global running
