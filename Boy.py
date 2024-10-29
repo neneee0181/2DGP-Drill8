@@ -91,7 +91,7 @@ class Run:
     @staticmethod
     def do(boy):
         boy.frame = (boy.frame + 1) % 8
-        boy.x += boy.dir * 3
+        boy.x += boy.dir * boy.speed
         pass
 
     @staticmethod
@@ -106,13 +106,10 @@ class Run:
 class AutoRun:
     @staticmethod
     def enter(boy, e):
-        if right_down(e) or left_up(e):
-            boy.action = 1
-            boy.dir = 1
-        elif left_down(e) or right_up(e):
-            boy.action = 0
-            boy.dir = -1
-        boy.frame = 0
+        boy.action = 1
+        boy.dir = 1
+        # 시작 시간을 기록
+        boy.start_time = get_time()
         pass
 
     @staticmethod
@@ -121,8 +118,19 @@ class AutoRun:
 
     @staticmethod
     def do(boy):
+        if get_time() - boy.start_time > 5:
+            boy.state_machine.add_event(('TIME_OUT', 0))
+            boy.speed = 3
+
+        if boy.x >= 785:
+            boy.dir = -1
+            boy.action = 0
+        elif boy.x <= 25:
+            boy.dir = 1
+            boy.action = 1
+
         boy.frame = (boy.frame + 1) % 8
-        boy.x += boy.dir * 3
+        boy.x += boy.dir * boy.speed
         pass
 
     @staticmethod
@@ -139,6 +147,7 @@ class Boy:
         self.x, self.y = 400, 90
         self.frame = 0
         self.dir = 0
+        self.speed = 3
         self.action = 3
         self.image = load_image('animation_sheet.png')
         self.state_machine = StateMachine(self)  # 어떤 객체를 위한 상태 머신인지 알려줄 필요가 있음
@@ -150,7 +159,7 @@ class Boy:
                 Run: {right_down: Idle, left_down: Idle, left_up: Idle, right_up: Idle, auto_run: AutoRun},
                 Sleep: {right_down: Run, left_down: Run, left_up: Run, right_up: Run, space_down: Idle,
                         auto_run: AutoRun},
-                AutoRun: {right_down: Run, left_down: Run, left_up: Run, right_up: Run}
+                AutoRun: {right_down: Run, left_down: Run, left_up: Run, right_up: Run, time_out: Idle}
             }
         )
 
