@@ -104,6 +104,7 @@ class Run:
 
 
 class AutoRun:
+
     @staticmethod
     def enter(boy, e):
         boy.action = 1
@@ -114,6 +115,10 @@ class AutoRun:
 
     @staticmethod
     def exit(boy, e):
+        boy.size_x = 100
+        boy.size_y = 100
+        boy.speed = 3
+        boy.y = 90
         pass
 
     @staticmethod
@@ -121,9 +126,10 @@ class AutoRun:
         if get_time() - boy.start_time > 5:
             boy.state_machine.add_event(('TIME_OUT', 0))
             boy.speed = 3
-            if boy.action == 0 : boy.action = 2
-            if boy.action == 1 : boy.action = 3
+            if boy.action == 0: boy.action = 2
+            if boy.action == 1: boy.action = 3
 
+        # 좌우 변환
         if boy.x >= 785:
             boy.dir = -1
             boy.action = 0
@@ -131,7 +137,18 @@ class AutoRun:
             boy.dir = 1
             boy.action = 1
 
+        # 스피드 증가
         boy.speed += 0.1
+
+        # 크기 증가
+        if get_time() - boy.start_time < 2.5:
+            boy.size_x += 2
+            boy.size_y += 2
+            boy.y += 0.7
+        else:
+            boy.size_x -= 2
+            boy.size_y -= 2
+            boy.y -= 0.7
 
         boy.frame = (boy.frame + 1) % 8
         boy.x += boy.dir * boy.speed
@@ -141,7 +158,7 @@ class AutoRun:
     def draw(boy):
         boy.image.clip_draw(
             boy.frame * 100, boy.action * 100, 100, 100,
-            boy.x, boy.y
+            boy.x, boy.y, boy.size_x, boy.size_y
         )
         pass
 
@@ -153,6 +170,8 @@ class Boy:
         self.dir = 0
         self.speed = 3
         self.action = 3
+        self.size_x = 100
+        self.size_y = 100
         self.image = load_image('animation_sheet.png')
         self.state_machine = StateMachine(self)  # 어떤 객체를 위한 상태 머신인지 알려줄 필요가 있음
         self.state_machine.start(Idle)
