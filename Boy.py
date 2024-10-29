@@ -107,8 +107,12 @@ class AutoRun:
 
     @staticmethod
     def enter(boy, e):
-        boy.action = 1
-        boy.dir = 1
+        if boy.action == 1 or boy.action == 3:
+            boy.action = 1
+            boy.dir = 1
+        elif boy.action == 0 or boy.action == 2:
+            boy.action = 0
+            boy.dir = -1
         # 시작 시간을 기록
         boy.start_time = get_time()
         pass
