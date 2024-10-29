@@ -1,7 +1,7 @@
 from pico2d import load_image, get_time
 
 from state_machine import space_down, time_out, right_down, left_down, left_up, \
-    right_up, start_event
+    right_up, start_event, auto_run
 from state_machine import StateMachine
 
 
@@ -103,6 +103,37 @@ class Run:
         pass
 
 
+class AutoRun:
+    @staticmethod
+    def enter(boy, e):
+        if right_down(e) or left_up(e):
+            boy.action = 1
+            boy.dir = 1
+        elif left_down(e) or right_up(e):
+            boy.action = 0
+            boy.dir = -1
+        boy.frame = 0
+        pass
+
+    @staticmethod
+    def exit(boy, e):
+        pass
+
+    @staticmethod
+    def do(boy):
+        boy.frame = (boy.frame + 1) % 8
+        boy.x += boy.dir * 3
+        pass
+
+    @staticmethod
+    def draw(boy):
+        boy.image.clip_draw(
+            boy.frame * 100, boy.action * 100, 100, 100,
+            boy.x, boy.y
+        )
+        pass
+
+
 class Boy:
     def __init__(self):
         self.x, self.y = 400, 90
@@ -114,9 +145,12 @@ class Boy:
         self.state_machine.start(Idle)
         self.state_machine.set_transitions(
             {
-                Idle: {right_down: Run, left_down: Run, left_up: Run, right_up: Run, time_out: Sleep},
-                Run: {right_down: Idle, left_down: Idle, left_up: Idle, right_up: Idle},
-                Sleep: {right_down: Run, left_down: Run, left_up: Run, right_up: Run, space_down: Idle}
+                Idle: {right_down: Run, left_down: Run, left_up: Run, right_up: Run, time_out: Sleep,
+                       auto_run: AutoRun},
+                Run: {right_down: Idle, left_down: Idle, left_up: Idle, right_up: Idle, auto_run: AutoRun},
+                Sleep: {right_down: Run, left_down: Run, left_up: Run, right_up: Run, space_down: Idle,
+                        auto_run: AutoRun},
+                AutoRun: {right_down: Run, left_down: Run, left_up: Run, right_up: Run}
             }
         )
 
