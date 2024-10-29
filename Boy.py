@@ -145,7 +145,7 @@ class AutoRun:
             boy.action = 1
 
         # 스피드 증가
-        boy.speed += 0.1
+        boy.speed += 0.2
 
         # 크기 증가
         if get_time() - boy.start_time < 2.5:
@@ -186,7 +186,7 @@ class Boy:
             {
                 Idle: {right_down: Run, left_down: Run, left_up: Run, right_up: Run, time_out: Sleep,
                        auto_run: AutoRun},
-                Run: {right_down: Idle, left_down: Idle, left_up: Idle, right_up: Idle, auto_run: AutoRun},
+                Run: {right_down: Idle, left_down: Idle, left_up: Idle, right_up: Idle},
                 Sleep: {right_down: Run, left_down: Run, left_up: Run, right_up: Run, space_down: Idle,
                         auto_run: AutoRun},
                 AutoRun: {right_down: Run, left_down: Run, left_up: Run, right_up: Run, time_out: Idle}
