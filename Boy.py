@@ -121,6 +121,8 @@ class AutoRun:
         if get_time() - boy.start_time > 5:
             boy.state_machine.add_event(('TIME_OUT', 0))
             boy.speed = 3
+            if boy.action == 0 : boy.action = 2
+            if boy.action == 1 : boy.action = 3
 
         if boy.x >= 785:
             boy.dir = -1
