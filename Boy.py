@@ -119,6 +119,7 @@ class AutoRun:
 
     @staticmethod
     def exit(boy, e):
+        # 값 초기화
         boy.size_x = 100
         boy.size_y = 100
         boy.speed = 3
@@ -127,9 +128,11 @@ class AutoRun:
 
     @staticmethod
     def do(boy):
+
         if get_time() - boy.start_time > 5:
             boy.state_machine.add_event(('TIME_OUT', 0))
             boy.speed = 3
+            # 종료 -> 방향
             if boy.action == 0: boy.action = 2
             if boy.action == 1: boy.action = 3
 
@@ -148,7 +151,7 @@ class AutoRun:
         if get_time() - boy.start_time < 2.5:
             boy.size_x += 2
             boy.size_y += 2
-            boy.y += 0.7
+            boy.y += 0.7 # 캐릭터 y 좌표 값 증가
         else:
             boy.size_x -= 2
             boy.size_y -= 2
